@@ -1,0 +1,27 @@
+name: Daily Commit Action
+
+on:
+  schedule:
+    - cron: "15 7 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write  # ✅ allow git push
+
+jobs:
+  commit_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Make a commit - 25ds2000003@ds.study.iitm.ac.in
+        run: |
+          echo "Last run: $(date -u)" > last_run.txt
+          git config --global user.name "GitHub Action Bot"
+          git config --global user.email "25ds2000003@ds.study.iitm.ac.in"
+          git add last_run.txt
+          git commit -m "Automated commit from daily workflow - $(date -u)" || echo "No changes to commit"
+          git push
